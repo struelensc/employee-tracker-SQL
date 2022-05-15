@@ -3,6 +3,9 @@ const Role = require("./lib/Role");
 const Department = require("./lib/Department");
 const Company = require("./lib/Company");
 
+// Import SQL connection
+const db = require("./config/connection");
+
 // Initial question prompt
 const initalMenu = [
   {
@@ -90,3 +93,8 @@ const updateEmployee = [
     choices: [], //list of roles
   },
 ];
+
+// Query database
+db.query("SELECT * FROM department", function (err, results) {
+  console.log(results);
+});

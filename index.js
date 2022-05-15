@@ -40,20 +40,33 @@ async function mainMenu() {
 // Redirects user to the next applicable question and/or answer
 function redirect(data) {
   console.log(data);
+  let view = new Company();
 
   const redirctOptions = [
     {
       choice: "View All Employees",
       dir: () => {
-        let res = new Company();
-        res.getEmployees();
+        view.getEmployees();
+      },
+    },
+    {
+      choice: "View All Roles",
+      dir: () => {
+        view.getRoles();
+      },
+    },
+    {
+      choice: "View All Departments",
+      dir: () => {
+        view.getDepartments();
       },
     },
   ];
 
-  if (data.menuChoice === redirctOptions[0].choice) {
-    console.log(redirctOptions[0].choice);
-    redirctOptions[0].dir();
+  for (let i = 0; i < redirctOptions.length; i++) {
+    if (data.menuChoice === redirctOptions[i].choice) {
+      redirctOptions[i].dir();
+    }
   }
 }
 

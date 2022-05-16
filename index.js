@@ -38,27 +38,35 @@ async function mainMenu() {
 }
 
 // Redirects user to the next applicable question and/or answer
-function redirect(data) {
-  console.log(data);
-  let view = new Company();
+async function redirect(data) {
+  const view = new Company();
 
   const redirctOptions = [
     {
       choice: "View All Employees",
-      dir: () => {
-        view.getEmployees();
+      dir: async () => {
+        await view.getEmployeeData();
+        await mainMenu();
       },
     },
     {
       choice: "View All Roles",
-      dir: () => {
-        view.getRoles();
+      dir: async () => {
+        await view.getRoleData();
+        await mainMenu();
       },
     },
     {
       choice: "View All Departments",
+      dir: async () => {
+        await view.getDepartmentData();
+        await mainMenu();
+      },
+    },
+    {
+      choice: "Add Employee",
       dir: () => {
-        view.getDepartments();
+        addEmployee();
       },
     },
   ];
@@ -68,6 +76,50 @@ function redirect(data) {
       redirctOptions[i].dir();
     }
   }
+}
+
+async function addEmployee() {
+  let view = new Company();
+  let roles = await view.listRoles();
+  let employees = await view.listEmployees();
+
+  // Questions for adding an employee
+  const addEmployeeQuest = [
+    {
+      type: "input",
+      name: "employeeFirstName",
+      message: "What is the employee's first name?",
+    },
+    {
+      type: "input",
+      name: "employeeLastName",
+      message: "What is the employee's last name?",
+    },
+    {
+      type: "list",
+      name: "employeeRole",
+      message: "What is the employee's role?",
+      choices: roles, //list of rolls
+    },
+    {
+      type: "list",
+      name: "employeeManager",
+      message: "Who is the employee's manager?",
+      choices: employees, //list of employees
+    },
+  ];
+
+  const employeeData = await inquirer.prompt(addEmployeeQuest);
+
+  let fname = employeeData.employeeFirstName;
+  let lname = employeeData.employeeLastName;
+  let role = employeeData.employeeRole;
+  let manager = employeeData.employeeManager;
+
+  const newEmployee = new Employee(fname, lname, role, manager);
+  newEmployee.writeToDatabase();
+
+  mainMenu();
 }
 
 // Question for adding a department
@@ -96,32 +148,6 @@ const addRole = [
     name: "roleDepartment",
     message: "Which department does the role belong to?",
     choices: [], //list of departments
-  },
-];
-
-// Questions for adding an employee
-const addEmployee = [
-  {
-    type: "input",
-    name: "employeeFirstName",
-    message: "What is the employee's first name?",
-  },
-  {
-    type: "input",
-    name: "employeeLastName",
-    message: "What is the employee's last name?",
-  },
-  {
-    type: "list",
-    name: "employeeRole",
-    message: "What is the employee's role?",
-    choices: [], //list of rolls
-  },
-  {
-    type: "list",
-    name: "employeeManager",
-    message: "Who is the employee's manager?",
-    choices: [], //list of employees
   },
 ];
 

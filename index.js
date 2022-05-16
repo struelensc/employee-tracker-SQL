@@ -81,6 +81,12 @@ async function redirect(data) {
         addRole();
       },
     },
+    {
+      choice: "Update Employee Role",
+      dir: () => {
+        updateEmployee();
+      },
+    },
   ];
 
   for (let i = 0; i < redirctOptions.length; i++) {
@@ -193,20 +199,35 @@ async function addRole() {
   mainMenu();
 }
 
-// Questions for updating an employee
-const updateEmployee = [
-  {
-    type: "list",
-    name: "employeeName",
-    message: "Which employee's role do you want to update?",
-    choices: [], //list of employees
-  },
-  {
-    type: "list",
-    name: "employeeNewRole",
-    message: "Which role do you want to assign the selected employee?",
-    choices: [], //list of roles
-  },
-];
+async function updateEmployee() {
+  let view = new Company();
+  let roles = await view.listRoles();
+  let employees = await view.listEmployees();
+
+  // Questions for updating an employee
+  const updateEmployee = [
+    {
+      type: "list",
+      name: "employeeName",
+      message: "Which employee's role do you want to update?",
+      choices: employees, //list of employees
+    },
+    {
+      type: "list",
+      name: "employeeNewRole",
+      message: "Which role do you want to assign the selected employee?",
+      choices: roles, //list of roles
+    },
+  ];
+
+  const updatedEmployee = await inquirer.prompt(updateEmployee);
+
+  let name = updatedEmployee.employeeName;
+  let role = updatedEmployee.employeeNewRole;
+
+  await Employee.updateDatabase(role, name);
+
+  mainMenu();
+}
 
 init();

@@ -28,6 +28,7 @@ async function mainMenu() {
         "Add Role",
         "View All Departments",
         "Add Department",
+        "Quit",
       ],
     },
   ];
@@ -85,6 +86,13 @@ async function redirect(data) {
         updateEmployee();
       },
     },
+    {
+      choice: "Quit",
+      dir: () => {
+        console.log("Bye!");
+        db.end();
+      },
+    },
   ];
 
   for (let i = 0; i < redirctOptions.length; i++) {
@@ -130,10 +138,18 @@ async function addEmployee() {
   let fname = employeeData.employeeFirstName;
   let lname = employeeData.employeeLastName;
   let role = employeeData.employeeRole;
-  let manager = employeeData.employeeManager;
 
-  const newEmployee = new Employee(fname, lname, role, manager);
-  await newEmployee.writeToDatabase();
+  if (employeeData.employeeManager === 0) {
+    let manager = null;
+
+    const newEmployee = new Employee(fname, lname, role, manager);
+    await newEmployee.writeToDatabase();
+  } else {
+    let manager = employeeData.employeeManager;
+
+    const newEmployee = new Employee(fname, lname, role, manager);
+    await newEmployee.writeToDatabase();
+  }
 
   mainMenu();
 }

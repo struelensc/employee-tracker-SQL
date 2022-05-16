@@ -5,14 +5,14 @@ const Role = require("./lib/Role");
 const Department = require("./lib/Department");
 const Company = require("./lib/Company");
 
-// Import SQL connection
+// IMPORT SQL CONNECTION
 const db = require("./config/connection");
 
 function init() {
   mainMenu();
 }
 
-// Supplies the main menu question
+// SUPPLIES THE MAIN MENU QUESTION
 async function mainMenu() {
   // Initial question prompt
   const initalMenu = [
@@ -37,7 +37,7 @@ async function mainMenu() {
   redirect(answer);
 }
 
-// Redirects user to the next applicable question and/or answer
+// REDIRECTS USER TO THE NEXT APPLICABLE QUESTION AND/OR ANSWER
 async function redirect(data) {
   const view = new Company();
 
@@ -69,6 +69,12 @@ async function redirect(data) {
         addEmployee();
       },
     },
+    {
+      choice: "Add Department",
+      dir: () => {
+        addDepartment();
+      },
+    },
   ];
 
   for (let i = 0; i < redirctOptions.length; i++) {
@@ -78,6 +84,7 @@ async function redirect(data) {
   }
 }
 
+// ADDS NEW EMPLOYEE TO DATABASE
 async function addEmployee() {
   let view = new Company();
   let roles = await view.listRoles();
@@ -117,19 +124,31 @@ async function addEmployee() {
   let manager = employeeData.employeeManager;
 
   const newEmployee = new Employee(fname, lname, role, manager);
-  newEmployee.writeToDatabase();
+  await newEmployee.writeToDatabase();
 
   mainMenu();
 }
 
-// Question for adding a department
-const addDepartment = [
-  {
-    type: "input",
-    name: "departmentName",
-    message: "What is the name of the department?",
-  },
-];
+// ADDS NEW DEPARTMENT TO DATABASE
+async function addDepartment() {
+  // Question for adding a department
+  const addDepartmentQuest = [
+    {
+      type: "input",
+      name: "departmentName",
+      message: "What is the name of the department?",
+    },
+  ];
+
+  const departmentData = await inquirer.prompt(addDepartmentQuest);
+
+  let name = departmentData.departmentName;
+
+  const newDepartment = new Department(name);
+  await newDepartment.writeToDatabase();
+
+  mainMenu();
+}
 
 // Questions for adding a role
 const addRole = [

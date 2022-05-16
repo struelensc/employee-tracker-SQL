@@ -39,27 +39,25 @@ async function mainMenu() {
 
 // REDIRECTS USER TO THE NEXT APPLICABLE QUESTION AND/OR ANSWER
 async function redirect(data) {
-  const view = new Company();
-
   const redirctOptions = [
     {
       choice: "View All Employees",
       dir: async () => {
-        await view.getEmployeeData();
+        await Company.getEmployeeData();
         await mainMenu();
       },
     },
     {
       choice: "View All Roles",
       dir: async () => {
-        await view.getRoleData();
+        await Company.getRoleData();
         await mainMenu();
       },
     },
     {
       choice: "View All Departments",
       dir: async () => {
-        await view.getDepartmentData();
+        await Company.getDepartmentData();
         await mainMenu();
       },
     },
@@ -98,9 +96,8 @@ async function redirect(data) {
 
 // ADDS NEW EMPLOYEE TO DATABASE
 async function addEmployee() {
-  let view = new Company();
-  let roles = await view.listRoles();
-  let employees = await view.listEmployees();
+  let roles = await Company.listRoles();
+  let employees = await Company.listEmployees();
 
   // Questions for adding an employee
   const addEmployeeQuest = [
@@ -164,8 +161,7 @@ async function addDepartment() {
 
 // ADDS NEW ROLE TO DATABASE
 async function addRole() {
-  let view = new Company();
-  let departments = await view.listDepartments();
+  let departments = await Company.listDepartments();
 
   // Questions for adding a role
   const addRoleQuest = [
@@ -200,9 +196,8 @@ async function addRole() {
 }
 
 async function updateEmployee() {
-  let view = new Company();
-  let roles = await view.listRoles();
-  let employees = await view.listEmployees();
+  let roles = await Company.listRoles();
+  let employees = await Company.listEmployees();
 
   // Questions for updating an employee
   const updateEmployee = [

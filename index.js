@@ -1,5 +1,6 @@
 const inquirer = require("inquirer");
 
+// IMPORT CLASSES
 const Employee = require("./lib/Employee");
 const Role = require("./lib/Role");
 const Department = require("./lib/Department");
@@ -211,6 +212,7 @@ async function addRole() {
   mainMenu();
 }
 
+// UPDATES EMPLOYEE ROLE IN DATABASE
 async function updateEmployee() {
   let roles = await Company.listRoles();
   let employees = await Company.listEmployees();
@@ -241,4 +243,5 @@ async function updateEmployee() {
   mainMenu();
 }
 
+// INITIALIZES APPLICATION
 init();

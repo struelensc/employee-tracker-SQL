@@ -75,6 +75,12 @@ async function redirect(data) {
         addDepartment();
       },
     },
+    {
+      choice: "Add Role",
+      dir: () => {
+        addRole();
+      },
+    },
   ];
 
   for (let i = 0; i < redirctOptions.length; i++) {
@@ -150,25 +156,42 @@ async function addDepartment() {
   mainMenu();
 }
 
-// Questions for adding a role
-const addRole = [
-  {
-    type: "input",
-    name: "roleName",
-    message: "What is the name of the role?",
-  },
-  {
-    type: "input",
-    name: "roleSalary",
-    message: "What is the salary for this role?",
-  },
-  {
-    type: "list",
-    name: "roleDepartment",
-    message: "Which department does the role belong to?",
-    choices: [], //list of departments
-  },
-];
+// ADDS NEW ROLE TO DATABASE
+async function addRole() {
+  let view = new Company();
+  let departments = await view.listDepartments();
+
+  // Questions for adding a role
+  const addRoleQuest = [
+    {
+      type: "input",
+      name: "roleName",
+      message: "What is the name of the role?",
+    },
+    {
+      type: "input",
+      name: "roleSalary",
+      message: "What is the salary for this role?",
+    },
+    {
+      type: "list",
+      name: "roleDepartment",
+      message: "Which department does the role belong to?",
+      choices: departments, //list of departments
+    },
+  ];
+
+  const roleData = await inquirer.prompt(addRoleQuest);
+
+  let name = roleData.roleName;
+  let salary = roleData.roleSalary;
+  let department = roleData.roleDepartment;
+
+  const newRole = new Role(name, salary, department);
+  await newRole.writeToDatabase();
+
+  mainMenu();
+}
 
 // Questions for updating an employee
 const updateEmployee = [
